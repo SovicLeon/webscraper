@@ -12,6 +12,8 @@ ostali resourci:
 from urllib.request import urlopen as uReq
 from bs4 import BeautifulSoup as soup
 
+import string
+
 my_url = 'https://www.mimovrste.com/ultrabooki?o=price&b%5B%5D=asus'
 
 # opening up connection, grabbing the page
@@ -46,9 +48,15 @@ for container in containers:
     price_container = container.findAll("span", {"class":"lst-product-item-price-value"})
     price_real = price_container[0].text
 
-    print("Ime produkta: " + product_name)
-    print("Cena: " + price_real)
+    price = price_real.strip()
+    price = price.translate({ord(c): None for c in string.whitespace})
 
-    f.write(product_name + ";" + price_real + "\n")
+    name = product_name.strip()
+    name = name.translate({ord(c): None for c in string.whitespace})
+
+    print("Ime produkta: " + name)
+    print("Cena: " + price)
+
+    f.write(name + ";" + price + "\n")
 
 f.close()
